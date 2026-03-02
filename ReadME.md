@@ -24,3 +24,13 @@ Data lifecycle:
 - Users can call `clear_my_data` to immediately delete all their messages
 - Data encrypted in transit (TLS) between services
 
+Auth & Authorization:
+- User auth: OAuth2 Proxy (Google/GitHub login)
+- Agent auth: Scoped API key per user (stored in Kubernetes Secret)
+- Service-to-service: Kubernetes ServiceAccount tokens
+
+MCP tool restrictions:
+- Agent has **read-only** access to messages
+- `search_messages` — scoped to authenticated user's data only
+- `get_conversation` — scoped to authenticated user's data only
+- No write/delete permissions for the agent
