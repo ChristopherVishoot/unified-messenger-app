@@ -34,3 +34,9 @@ MCP tool restrictions:
 - `search_messages` — scoped to authenticated user's data only
 - `get_conversation` — scoped to authenticated user's data only
 - No write/delete permissions for the agent
+
+AI Agent:
+- Local LLM via Ollama (`llama3` or `mistral`)
+- Runs on `http://localhost:11434`
+- Connects to MCP server for read-only message access
+- Handles scheduling requests based on message context
