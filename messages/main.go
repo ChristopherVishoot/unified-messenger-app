@@ -15,12 +15,16 @@ import (
 func main() {
     // Connect to Postgres for session storage
     dbLog := waLog.Stdout("Database", "DEBUG", true)
-    container, err := sqlstore.New("postgres", "postgres://user:pass@localhost:5432/bridge_db?sslmode=disable", dbLog)
+    container, err := sqlstore.New(
+		context.Background(), 
+		"postgres",
+		 "postgres://user:pass@localhost:5432/bridge_db?sslmode=disable",
+		  dbLog)
     if err != nil {
         panic(err)
     }
 
-    deviceStore, err := container.GetFirstDevice()
+    deviceStore, err := container.GetFirstDevice(context.Background())
     if err != nil {
         panic(err)
     }
