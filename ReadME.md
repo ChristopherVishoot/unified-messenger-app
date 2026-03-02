@@ -22,6 +22,5 @@ Data lifecycle:
 - Auto-deleted after retention period (30 days default)
 - Lost on server/pod restart (no persistence)
 - Users can call `clear_my_data` to immediately delete all their messages
-
-## Messenger Features
+- Data encrypted in transit (TLS) between services
 
