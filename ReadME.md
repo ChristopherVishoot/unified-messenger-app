@@ -40,3 +40,47 @@ AI Agent:
 - Runs on `http://localhost:11434`
 - Connects to MCP server for read-only message access
 - Handles scheduling requests based on message context
+
+## Redis Data Model
+
+Redis is a key-value store. Each message is stored as a Hash with a UUID as the key.
+
+**Key Format:** `message:{uuid}`
+
+**Value (Hash fields):**
+
+| Field | Description |
+|-------|-------------|
+| `user_id` | Owner of the message (for scoping queries to authenticated user) |
+| `conversation_id` | Groups messages into conversations (for `get_conversation` tool) |
+| `sender_id` | Who sent the message |
+| `sender_name` | Display name for UI |
+| `platform` | `whatsapp`, `signal`, or `telegram` |
+| `direction` | `inbound` or `outbound` |
+| `message` | Actual message content |
+| `timestamp` | When the message was inserted into the cache |
+| `message_id` | Original message ID from the messenger platform (if available) |
+| `hash` | Hash value of the inserted object (for deduplication) |
+
+**TTL:** Each key has a TTL of 30 days (2592000 seconds) by default, auto-deleted by Redis.
+
+## RediSearch Index
+
+RediSearch is a module that adds secondary indexing and full-text search on top of Redis data.
+
+**Index Definition:**
+```
+FT.CREATE idx:messages ON HASH PREFIX 1 message:
+  SCHEMA 
+    user_id TAG
+    conversation_id TAG
+    sender_id TAG
+    platform TAG
+    direction TAG
+    message TEXT
+    timestamp NUMERIC SORTABLE
+```
+
+**Example Queries:**
+- Search user's messages: `FT.SEARCH idx:messages "@user_id:{user123} @message:zoom" SORTBY timestamp DESC`
+- Get conversation: `FT.SEARCH idx:messages "@user_id:{user123} @conversation_id:{conv456}" SORTBY timestamp ASC`
