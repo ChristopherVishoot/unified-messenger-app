@@ -1,14 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: cache-service
-  namespace: hello
+  name: "{{ .Values.cache.name }}-service"
+  namespace: "{{ .Values.namespace }}"
   labels:
-    app: cache-service
+    app: "{{ .Values.cache.name }}"
 spec:
   ports:
-  - port: 6379
+  - port: {{ .Values.cache.port }}
     name: cache
   clusterIP: None
   selector:
-    app: cache
+    app: "{{ .Values.cache.name }}"

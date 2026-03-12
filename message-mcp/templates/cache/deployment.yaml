@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: redis-cache
-  namespace: hello
+  name: "{{ .Values.cache.name }}"
+  namespace: "{{ .Values.namespace }}"
   labels:
-    app: cache
+    app: "{{ .Values.cache.name }}"
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: cache
+      app: "{{ .Values.cache.name }}"
   template:
     metadata:
       labels:
-        app: cache
+        app: "{{ .Values.cache.name }}"
     spec:
       containers:
-      - name: cache
-        image: redis:8.6.1
+      - name: "{{ .Values.cache.name }}"
+        image: "{{ .Values.cache.image.repository }}:{{ .Values.cache.image.tag }}"
         ports:
-        - containerPort: 6379
+        - containerPort: {{ .Values.cache.port }}
