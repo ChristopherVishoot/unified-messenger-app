@@ -1,26 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgres-deployment
-  namespace: hello
+  name: "{{ .Values.database.name }}-deployment"
+  namespace: "{{ .Values.namespace }}"
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: postgres
+      app: "{{ .Values.database.name }}"
   template:
     metadata:
       labels:
-        app: postgres
+        app: "{{ .Values.database.name }}"
     spec:
       containers:
-      - name: postgres
-        image: postgres:latest
+      - name: "{{ .Values.database.name }}"
+        image: "{{ .Values.database.image.repository }}:{{ .Values.database.image.tag }}"
         ports:
-        - containerPort: 5432
+        - containerPort: {{ .Values.database.port }}
         env:
         - name: POSTGRES_USER
-          value: "user"
+          value: "{{ .Values.database.user }}"
         - name: POSTGRES_PASSWORD
           value: "pass"
         - name: POSTGRES_DB
