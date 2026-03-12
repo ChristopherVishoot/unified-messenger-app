@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cache-service
+  namespace: hello
+  labels:
+    app: cache-service
+spec:
+  ports:
+  - port: 80
+    name: cache
+  clusterIP: None
+  selector:
+    app: cache
